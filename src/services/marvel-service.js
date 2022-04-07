@@ -22,18 +22,15 @@ class MarvelService {
         return this._transformCharacter(res.data.results[0]);
     }
 
-    _transformCharacter = (char) => {        /* return object of character, for setState*/
-        if (char.description.length < 5){
-            char.description = "We are sorry, we dont have a desctiption for this character, you can check wiki or official web cite"
-        }        
+    _transformCharacter = (character) => {        /* return object of character, for setState*/
 
         return {
-            name: char.name, 
-            description: char.description.length < 210 ? 
-            char.description: (`${char.description.substring(0, 199)}...`),
-            thumbnail: `${char.thumbnail.path}.${char.thumbnail.extension}`,     
-            homepage: char.urls[0].url, 
-            wiki: char.urls[1].url
+            id: character.id,
+            name: character.name, 
+            description: character.description ? `${character.description.substring(0, 205)}...}` : "There is no description for this character",
+            thumbnail: `${character.thumbnail.path}.${character.thumbnail.extension}`,     
+            homepage: character.urls[0].url, 
+            wiki: character.urls[1].url
         }          
     }
 

@@ -11,6 +11,8 @@
     "react-scripts": "5.0.0",
     "sass": "^1.49.11",
     "scss": "^0.2.4",
+    "util": "^0.12.4",
+    "uuidv4": "^6.2.13",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

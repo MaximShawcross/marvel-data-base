@@ -3,6 +3,7 @@ import RandomChar from "../random-char/random-char";
 import CharList from "../char-list/char-list";
 import CharInfo from "../char-info/char-info";
 
+
 import decoration from '../../resources/img/vision.png';
 
 const App = () => {
