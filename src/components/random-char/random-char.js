@@ -2,7 +2,7 @@ import { Component } from 'react';
 
 import Spinner from '../spinner/spinner';
 import MarvelService from '../../services/marvel-service';
-import ErrorMassage from '../error-massage/error-massage';
+import ErrorMessage from '../error-message/error-message';
 
 import './random-char.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
@@ -43,9 +43,7 @@ class RandomChar extends Component {
 
     updateCharacter = () => {
         const id = Math.floor(Math.random() * (1011400 - 1011000 ) + 1011000);
-
-        this.onCharacterLoading();
-
+        this.onCharacterLoading()
         this.marvelService
             .getCharacter( id )
             .then(this.onCharacterLoaded)
@@ -55,7 +53,7 @@ class RandomChar extends Component {
     render() {
         const {character, loading, error} = this.state;
      
-        const errorMassage = error ? <ErrorMassage/> : null;
+        const errorMassage = error ? <ErrorMessage/> : null;
         const spinner = loading ? <Spinner/> : null;
         const content = !(loading || errorMassage) ? <View character={character}/> : null
 
@@ -94,22 +92,22 @@ const View = ({character}) => {  /* rendering component */
 
     return (
         <div className="randomchar__block">
-                    <img src={thumbnail} alt="Random character" className="randomchar__img" style ={imgStyle}/>
-                    <div className="randomchar__info">
-                        <p className="randomchar__name">{name}</p>
-                        <p className="randomchar__descr">
-                            {description}
-                        </p>
-                        <div className="randomchar__btns">
-                            <a href={homepage} className="button button__main">
-                                <div className="inner">homepage</div>
-                            </a>
-                            <a href={wiki} className="button button__secondary">
-                                <div className="inner">Wiki</div>
-                            </a>
-                        </div>
-                    </div>
+            <img src={thumbnail} alt="Random character" className="randomchar__img" style ={imgStyle}/>
+            <div className="randomchar__info">
+                <p className="randomchar__name">{name}</p>
+                <p className="randomchar__descr">
+                    {description}
+                </p>
+                <div className="randomchar__btns">
+                    <a href={homepage} className="button button__main">
+                        <div className="inner">homepage</div>
+                    </a>
+                    <a href={wiki} className="button button__secondary">
+                        <div className="inner">Wiki</div>
+                    </a>
                 </div>
+            </div>
+        </div>
     )
 }
 

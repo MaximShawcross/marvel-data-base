@@ -8,6 +8,14 @@ import CharInfo from "../char-info/char-info";
 import decoration from '../../resources/img/vision.png';
 
 class App extends Component {
+    state = {
+        selectedCharacter: null,
+    }
+
+    onCharSelected = (id) => {
+        this.setState({selectedCharacter: id})
+    }
+
     render () {
         return (
             <div className="app">
@@ -15,8 +23,8 @@ class App extends Component {
                 <main>
                     <RandomChar/>
                     <div className="char__content">
-                        <CharList/>
-                        <CharInfo/>
+                        <CharList onCharSelected = {this.onCharSelected}/> {/* method for state lifting */}
+                        <CharInfo charId = {this.state.selectedCharacter}/>
                     </div>
                     <img className="bg-decoration" src={decoration} alt="vision"/>
                 </main>

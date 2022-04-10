@@ -1,10 +1,10 @@
 import img from "./error.gif"
-import './error-massage.scss'
+import './error-message.scss'
 
-const ErrorMassage = () => {
+const ErrorMessage = () => {
     return (
         <img className="img" src= {img} alt="error gif" />
     )
 }
 
-export default ErrorMassage;
+export default ErrorMessage;

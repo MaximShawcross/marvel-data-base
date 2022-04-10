@@ -1,6 +1,6 @@
 import { Component } from 'react';
 
-import ErrorMassage from '../error-massage/error-massage';
+import ErrorMessage from '../error-message/error-message';
 import Spinner from '../spinner/spinner';
 import MarvelService from '../../services/marvel-service';
 
@@ -8,7 +8,6 @@ import './char-list.scss';
 
 
 class CharList extends Component {
-
     state = {
         charList: [],
         loading: true,
@@ -37,24 +36,25 @@ class CharList extends Component {
         })
     }
 
-    // this method was created for optimization, for do not put it to render()
-    renderItems(arr) {
-        const items =  arr.map((item) => {
+    // this method was created for optimization, for dont put it to render ()
+    renderItems(characters) {
+        const items =  characters.map((item) => {
             let imgStyle = {'objectFit' : 'cover'};
-            if (item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') { // if img not found on server
+            if (item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
                 imgStyle = {'objectFit' : 'unset'};
             }
             
             return (
                 <li 
                     className="char__item"
-                    key={item.id}>
+                    key={item.id}
+                    onClick = {() => this.props.onCharSelected(item.id)}>
                         <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
                         <div className="char__name">{item.name}</div>
                 </li>
             )
         });
-        // spinner/error centring if items dot loaded
+        // constuction for centring error/loading
         return (
             <ul className="char__grid">
                 {items}
@@ -68,7 +68,7 @@ class CharList extends Component {
         
         const items = this.renderItems(charList);
 
-        const errorMessage = error ? <ErrorMassage/> : null;
+        const errorMessage = error ? <ErrorMessage/> : null;
         const spinner = loading ? <Spinner/> : null;
         const content = !(loading || error) ? items : null;
 
