@@ -9,6 +9,7 @@ import MarvelService from '../../services/marvel-service';
 import './char-info.scss';
 
 
+
 class CharInfo extends Component {
     state = {
         char: null,
@@ -26,6 +27,12 @@ class CharInfo extends Component {
         if(this.props.charId !== prevProps.charId) {
             this.componentDidMount()
         }
+    }
+
+    componentDidCatch(error, info) {
+        console.log(error, info);
+        this.setState({error})
+
     }
 
     unpdateCharacter = () => {
