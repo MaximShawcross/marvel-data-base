@@ -7,14 +7,14 @@ class MarvelService {
         let res = await fetch(url);
 
         if(!res.ok) {
-            throw new Error(`cloud not fetch ${url}, status: ${(await res).status}`)
+            throw new Error(`cloud not fetch ${url}, status: ${res.status}`)
         }
 
         return await res.json();
     }
 
-    getALlCharacters = async (offset = this._baseOffset) => {
-        const res =await this.getResources(`${this._apiBase}characters?limit=9&offset=${offset}&${this._apiKey}`);
+    getAllCharacters = async (offset = this._baseOffset) => {
+        const res = await this.getResources(`${this._apiBase}characters?limit=9&offset=${offset}&${this._apiKey}`);
         return res.data.results.map(this._transformCharacter); /* call __transformCharacter func for every character(item) */
     }
 

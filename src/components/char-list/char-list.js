@@ -1,4 +1,6 @@
+import React from 'react';
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import ErrorMessage from '../error-message/error-message';
 import Spinner from '../spinner/spinner';
@@ -13,15 +15,23 @@ class CharList extends Component {
         loading: true,
         error: false,
         newItemLoading: false,
-        offset: 210,                   //start value
+        offset: 210,
         charEnded: false
     }
-    
+
     marvelService = new MarvelService();
 
     componentDidMount() {
         this.onRequest();
     }   
+
+    onRequest = (offset) => {
+        this.onCharListLoading();
+
+        this.marvelService.getAllCharacters(offset)
+            .then(this.onCharListLoaded)
+            .catch(this.onError)
+    }
 
     onCharListLoading = () => {
         this.setState({
@@ -51,31 +61,51 @@ class CharList extends Component {
             loading: false
         });
     }
+    //refs and active style for char-items
+    itemRefs = [];
 
-    onRequest = (offset) => {
-        this.onCharListLoading();
+    setRef = (ref) => {
+        this.itemRefs.push(ref);
+    }
+    //active style
+    focusOnItem = (id) => {
+        this.itemRefs.forEach(item => item.classList.remove('char__item_selected'));
+        this.itemRefs[id].classList.add('char__item_selected');
+        this.itemRefs[id].focus();
 
-        this.marvelService.getALlCharacters(offset)
-            .then(this.onCharListLoaded)
-            .catch(this.onError);
     }
 
     // this method was created for optimization, for dont put it to render ()
     renderItems(characters) {
-        const items =  characters.map((item) => {
+
+
+        const items =  characters.map((item, i) => {
             let imgStyle = {'objectFit' : 'cover'};
+
             if (item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
                 imgStyle = {'objectFit' : 'unset'};
             }
             
             return (
-                <li 
-                    className="char__item"
-                    key={item.id}
-                    onClick = {() => this.props.onCharSelected(item.id)}>
-                        <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
-                        <div className="char__name">{item.name}</div>
-                </li>
+                    <li 
+                        className = "char__item"
+                        key = {item.id}
+                        tabIndex = {0}
+                        ref={this.setRef}
+                        onClick = {() => {
+                            this.props.onCharSelected(item.id);
+                            this.focusOnItem(i);
+                        }}
+                        onKeyPress = {(e) => {
+                            if(e.key === " " || e.key === "Enter"){
+                                this.focusOnItem(i);
+                                this.props.onCharSelected(item.id);
+                            }
+                        }}       
+                        >
+                        <img src = {item.thumbnail} alt = {item.name} style = {imgStyle}/>
+                        <div className = "char__name">{item.name}</div>
+                    </li>
             )
         });
         // constuction for centring error/loading
@@ -110,6 +140,10 @@ class CharList extends Component {
             </div>
         )
     }
+}
+
+CharList.propTypes = {
+    onCharSelected: PropTypes.func.isRequired
 }
 
 export default CharList;
