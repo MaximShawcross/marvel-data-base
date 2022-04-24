@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
 import Spinner from '../spinner/spinner';
 import ErrorMessage from '../error-message/error-message';
@@ -18,9 +18,9 @@ const CharInfo = (props) => {
 
     useEffect(() => {
         updateCharacter();
-    }, [])
+    }, [props.charId]);
 
-    const updateCharacter = useCallback(() => {
+    const updateCharacter = () => {
         const {charId} = props;
         
         if ( !charId ) {
@@ -33,25 +33,19 @@ const CharInfo = (props) => {
             .then(onCharacterLoaded)
             .catch(onError);
 
-        console.log('func runs');
-    }, [props.charId]);
-
-    useEffect(() => {
-        updateCharacter();        
-    }, [updateCharacter])
-
+        // console.log('func runs');
+    };
 
     const onCharacterLoaded = (char) => {
+        setLoading(false);
         setChar(item => char);
-        setLoading(item => false);
     }
 
     const onCharacterLoading = () => {
-        setLoading(item => true);
+        setLoading(true);
     }
 
-    const onError = (char) => {
-        setChar(item => char);
+    const onError = () => {
         setLoading(false);
         setError(true);
     }
@@ -81,40 +75,40 @@ const View = ({character}) => {
         imgStyle = {'objectFit' : 'unset'};
     }
     return ( 
-            <>
-                <div className="char__basics">
-                    <img src = {thumbnail} alt = {name} style = {imgStyle}/>
-                    <div>
-                        <div className="char__info-name">{name}</div>
-                        <div className="char__btns">
-                            <a href = {homepage} className="button button__main">
-                                <div className="inner">homepage</div>
-                            </a>
-                            <a href = {wiki} className="button button__secondary">
-                                <div className="inner">Wiki</div>
-                            </a>
-                        </div>
+        <>
+            <div className="char__basics">
+                <img src = {thumbnail} alt = {name} style = {imgStyle}/>
+                <div>
+                    <div className="char__info-name">{name}</div>
+                    <div className="char__btns">
+                        <a href = {homepage} className="button button__main">
+                            <div className="inner">homepage</div>
+                        </a>
+                        <a href = {wiki} className="button button__secondary">
+                            <div className="inner">Wiki</div>
+                        </a>
                     </div>
                 </div>
-                <div className="char__descr">
-                    {description}
-                </div>
-                <div className="char__comics">Comics:</div>
-                <ul className="char__comics-list">              {/* comics list rendering  */}
-                    {comics.lenght > 0 ? null : "There is no comics for this characters"}
-                    {
-                        comics.map((item, i) => {
-                            // eslint-disable-next-line
-                            if(i >= 10) return;
-                                return(                        
-                                    <li key = {i} className="char__comics-item">
-                                        {item.name}
-                                    </li>
-                                )                         
-                        })
-                    }
-                </ul>
-            </>
+            </div>
+            <div className="char__descr">
+                {description}
+            </div>
+            <div className="char__comics">Comics:</div>
+            <ul className="char__comics-list">              {/* comics list rendering  */}
+                {comics.lenght > 0 ? null : "There is no comics for this characters"}
+                {
+                    comics.map((item, i) => {
+                        // eslint-disable-next-line
+                    if(i >= 10) return;
+                        return(                        
+                            <li key = {i} className="char__comics-item">
+                                {item.name}
+                            </li>
+                        )                         
+                    })
+                }
+            </ul>
+        </>
     )
 }
 
