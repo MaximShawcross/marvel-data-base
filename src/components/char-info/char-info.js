@@ -1,5 +1,4 @@
-import { Component } from 'react';
-import PropTypes from 'prop-types'
+import { useState, useEffect, useCallback } from 'react';
 
 import Spinner from '../spinner/spinner';
 import ErrorMessage from '../error-message/error-message';
@@ -9,82 +8,69 @@ import MarvelService from '../../services/marvel-service';
 
 import './char-info.scss';
 
+const CharInfo = (props) => {
+    const [char, setChar] = useState(null),
+          [loading, setLoading] = useState(false),
+          [error, setError] = useState(false);
 
-
-class CharInfo extends Component {
-    state = {
-        char: null,
-        loading: false,
-        error: false
-    }
     
-    marvelService = new MarvelService();
+    const marvelService = new MarvelService();
 
-    componentDidMount() {
-        this.unpdateCharacter();
-    }
+    useEffect(() => {
+        updateCharacter();
+    }, [])
 
-    componentDidUpdate(prevProps, prevState) {
-        if(this.props.charId !== prevProps.charId) {
-            this.componentDidMount()
-        }
-    }
-
-    componentDidCatch(error, info) {
-        console.log(error, info);
-        this.setState({error})
-
-    }
-
-    unpdateCharacter = () => {
-        const {charId} = this.props;
-        if(!charId) {
+    const updateCharacter = useCallback(() => {
+        const {charId} = props;
+        
+        if ( !charId ) {
             return;
         }
 
-        this.onCharacterLoading();
+        onCharacterLoading();
 
-        this.marvelService.getCharacter(charId)
-            .then(this.onCharacterLoaded)
-            .catch(this.onError)
+        marvelService.getCharacter(charId)
+            .then(onCharacterLoaded)
+            .catch(onError);
+
+        console.log('func runs');
+    }, [props.charId]);
+
+    useEffect(() => {
+        updateCharacter();        
+    }, [updateCharacter])
+
+
+    const onCharacterLoaded = (char) => {
+        setChar(item => char);
+        setLoading(item => false);
     }
 
-    onCharacterLoaded = (char) => {
-        this.setState({
-            char, 
-            loading: false
-        })
+    const onCharacterLoading = () => {
+        setLoading(item => true);
     }
 
-    onCharacterLoading = () => {
-        this.setState({loading: true})
+    const onError = (char) => {
+        setChar(item => char);
+        setLoading(false);
+        setError(true);
     }
 
-    onError = (char) => {
-        this.setState({
-            char, 
-            loading: false,
-            error: true
-        })
-    }
-   
-    render() {
-        const {char, loading, error} = this.state;
      
-        const skeleton = char || loading || error ? null : <Skeleton/>
-        const errorMassage = error ? <ErrorMessage/> : null;
-        const spinner = loading ? <Spinner/> : null;
-        const content = !(loading || errorMassage || !char) ? <View character={char}/>: null
-        
-        return (
-            <div className="char__info">
-                {skeleton}
-                {errorMassage}
-                {spinner}
-                {content} 
-            </div>
-        )
-    }
+    const skeleton = char || loading || error ? null : <Skeleton/>
+    const errorMassage = error ? <ErrorMessage/> : null;
+    const spinner = loading ? <Spinner/> : null;
+    const content = !(loading || errorMassage || !char) ? <View character={char}/>: null
+    
+    return (
+        <div className="char__info">
+            {skeleton}
+            {errorMassage}
+            {spinner}
+            {content} 
+        </div>
+    )
+    
 }
 
 const View = ({character}) => {
@@ -127,16 +113,10 @@ const View = ({character}) => {
                                 )                         
                         })
                     }
-                    {/* <li className="char__comics-item">
-                        AMAZING SPIDER-MAN VOL. 7: BOOK OF EZEKIEL TPB (Trade Paperback)
-                    </li> */}
                 </ul>
             </>
     )
 }
 
-    // CharInfo.propTypes ={
-    //     charId: PropTypes.array
-    // }
 
 export default CharInfo;
