@@ -1,30 +1,23 @@
-class MarvelService {
-    _apiBase = "https://gateway.marvel.com:443/v1/public/";
-    _apiKey = "apikey=9c06721a7eb962698686f9911f07dd04";
-    _baseOffset = 210;
+import useHttp from "../hooks/http.hook";
 
-    getResources = async (url) => {
-        let res = await fetch(url);
+const useMarvelService = () => {
+    const {error, loading, request, clearError} = useHttp();
 
-        if(!res.ok) {
-            throw new Error(`cloud not fetch ${url}, status: ${res.status}`)
-        }
+    const _apiBase = "https://gateway.marvel.com:443/v1/public/";
+    const _apiKey = "apikey=9c06721a7eb962698686f9911f07dd04";
+    const _baseOffset = 210;
 
-        return await res.json();
+    const getAllCharacters = async (offset = _baseOffset) => {
+        const res = await request(`${_apiBase}characters?limit=9&offset=${offset}&${_apiKey}`);
+        return res.data.results.map(_transformCharacter); /* call __transformCharacter func for every character(item) */
     }
 
-    getAllCharacters = async (offset = this._baseOffset) => {
-        const res = await this.getResources(`${this._apiBase}characters?limit=9&offset=${offset}&${this._apiKey}`);
-        return res.data.results.map(this._transformCharacter); /* call __transformCharacter func for every character(item) */
+    const getCharacter = async (id) => { /* using getResourses for get data from server, then set data to res variable, and then call bottom func*/
+        const  res = await request(`${_apiBase}characters/${id}?${_apiKey}`); /*  */
+        return _transformCharacter(res.data.results[0]);
     }
 
-    getCharacter = async (id) => { /* using getResourses for get data from server, then set data to res variable, and then call bottom func*/
-        const  res = await this.getResources(`${this._apiBase}characters/${id}?${this._apiKey}`); /*  */
-        return this._transformCharacter(res.data.results[0]);
-    }
-
-    _transformCharacter = (character) => {        /* return object of character, for setState*/
-
+    const _transformCharacter = (character) => {        /* return object of character, for setState*/
         return {
             id: character.id,
             name: character.name, 
@@ -36,7 +29,15 @@ class MarvelService {
         }          
     }
 
+    return {
+        getAllCharacters,
+        getCharacter,
+        loading,
+        error,
+        clearError
+    }
+
     
 }
 
-export default MarvelService;
+export default useMarvelService;
