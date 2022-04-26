@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 
 import useMarvelService from '../../services/marvel-service';
 import ErrorMessage from '../error-message/error-message';
@@ -13,7 +13,7 @@ const ComicsList = () => {
     const [offset, setOffset] = useState(200);
     const [comicsEnded, setComicsEnded] = useState(false);
 
-    const {error, loading, getComics} = useMarvelService();
+    const {error, loading, getAllComics} = useMarvelService();
 
     useEffect(() => {
         onRequest(offset, true);
@@ -22,7 +22,7 @@ const ComicsList = () => {
     const onRequest = (offset, initial) => {
         initial ? setNewItemLoading(false): setNewItemLoading(true);
 
-        getComics(offset)
+        getAllComics(offset)
             .then(onComicsListLoaded);
     } 
 
@@ -38,24 +38,13 @@ const ComicsList = () => {
         setComicsEnded(ended);
     }
 
-    // const itemRefs = useRef([]);
-
-    // const focusOnItem = (id) => {
-    //     itemRefs.current.forEach(item => item.classList.remove('char__item_selected'));
-    //     itemRefs.current[id].classList.add('char__item_selected');
-    //     itemRefs.current[id].focus();
-    // }
+    console.log('render');
 
     function renderItems(comicsList) {
         const items = comicsList.map((item, i) => {
             return (
                 <li className="comics__item"
                     key = {item.id} 
-                    // tabIndex = {0}
-                    // ref={el => itemRefs.current[i] = el}
-                    // onClick = {() => {
-                    //     focusOnItem(i);
-                    // }}               
                     >
                     <a href="#">
                         <img src={item.thumbnail} alt={item.thumbnail} className="comics__item-img"/>

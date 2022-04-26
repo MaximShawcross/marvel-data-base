@@ -26,7 +26,7 @@ const CharList = (props) => {
         initial ? setNewItemLoading(true): setNewItemLoading(false);
 
         getAllCharacters(offset)
-            .then(onCharListLoaded)
+            .then(onCharListLoaded);
     }
 
     const onCharListLoaded = (newCharList) => {
@@ -50,7 +50,6 @@ const CharList = (props) => {
         itemRefs.current.forEach(item => item.classList.remove('char__item_selected'));
         itemRefs.current[id].classList.add('char__item_selected');
         itemRefs.current[id].focus();
-
     }
 
     // this method was created for optimization, for dont put it to render ()
@@ -96,7 +95,7 @@ const CharList = (props) => {
     const items = renderItems(charList);
 
     const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading && !newItemLoading? <Spinner/> : null;
+    const spinner = loading && !newItemLoading ? <Spinner/> : null;
 
     return (    
         <div className="char__list">
