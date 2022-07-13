@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 
 import PropTypes from 'prop-types';
+import { Transition } from 'react-transition-group';
 
 import ErrorMessage from '../error-message/error-message';
 import Spinner from '../spinner/spinner';
@@ -14,6 +15,22 @@ const CharList = (props) => {
           [newItemLoading, setNewItemLoading] = useState(false),
           [offset, setOffset] = useState(210),
           [charEnded, setCharEnded] = useState(false);
+          const [inAnim, setInAnim] = useState(false)
+    // animantion blocl 20-34, 59, 118-128
+    const duration = 1200;
+    
+    const defaultStyle = {
+        transition: `all ${duration}ms ease-in-out`,
+        opacity: 0,
+        visibility: "visible"
+    }
+    
+    const transitionStyles = {
+        entering: { opacity: 1, visibility: 'visible'},
+        entered:  { opacity: 1, visibility: 'visible' },
+        exiting:  { opacity: 0, visibility: 'hidden' },
+        exited:  { opacity: 0, visibility: 'hidden' },
+    };
 
     const {error, loading, getAllCharacters} = useMarvelService();
 
@@ -38,7 +55,8 @@ const CharList = (props) => {
         setCharList(charList => [...charList, ...newCharList]);
         setNewItemLoading(newItemLoading => false);
         setOffset(offset => offset + 9);
-        setCharEnded(charEnded => ended); 
+        setCharEnded(charEnded => ended);
+        setInAnim(value => true);
     }
 
     //refs and active style for char-items
@@ -62,9 +80,8 @@ const CharList = (props) => {
                 imgStyle = {'objectFit' : 'unset'};
             }
             
-            return (
-                <li 
-                    className = "char__item"
+            return ( 
+                <li className = "char__item"
                     key = {item.id}
                     tabIndex = {0}
                     ref={el => itemRefs.current[i] = el}
@@ -77,8 +94,7 @@ const CharList = (props) => {
                             props.onCharSelected(item.id);
                             focusOnItem(i);
                         }
-                    }}       
-                    >
+                    }}>
                     <img src = {item.thumbnail} alt = {item.name} style = {imgStyle}/>
                     <div className = "char__name">{item.name}</div>
                 </li>
@@ -99,9 +115,19 @@ const CharList = (props) => {
 
     return (    
         <div className="char__list">
+            <Transition timeout={duration} in = {inAnim}>
+                {
+                    state => (
+                        <div style={{
+                            ...defaultStyle,
+                            ...transitionStyles[state]}}>
+                            {items}
+                        </div>
+                    )
+                }
+            </Transition>
             {errorMessage}
             {spinner}
-            {items}
             <button className="button button__main button__long"
             disabled = {newItemLoading}
             style = {{'display': charEnded ? 'none': 'block'}}
