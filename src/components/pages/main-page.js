@@ -9,6 +9,7 @@ import ErrorBoundary from "../error-boundary/error-boundary";
 
 import decoration from '../../resources/img/vision.png';
 
+
 const MainPage = () => {
     const [selectedChar, setSelectedChar] = useState(null);
 
@@ -32,7 +33,7 @@ const MainPage = () => {
                         <CharInfo charId = {selectedChar}/>
                     </ErrorBoundary>
                     <ErrorBoundary>
-                        <CharSearchForm/>   
+                        <CharSearchForm />   
                     </ErrorBoundary>
                 </div>
             </div>  

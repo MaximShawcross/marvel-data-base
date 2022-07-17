@@ -8,7 +8,12 @@ const useMarvelService = () => {
     const _baseOffset = 210;
 
     const getCharacter = async (id) => { /* using getResourses for get data from server, then set data to res variable, and then call bottom func*/
-        const  res = await request(`${_apiBase}characters/${id}?${_apiKey}`); /*  */
+        const res = await request(`${_apiBase}characters/${id}?${_apiKey}`); /*  */
+        return _transformCharacter(res.data.results[0]);
+    }
+
+    const getCharacterByName = async (name) => {
+        const res = await request (`${_apiBase}characters?name=${name}&${_apiKey}`);
         return _transformCharacter(res.data.results[0]);
     }
 
@@ -54,6 +59,7 @@ const useMarvelService = () => {
 
     return {
         getCharacter,
+        getCharacterByName,
         getAllCharacters,
         getComics,
         getAllComics,

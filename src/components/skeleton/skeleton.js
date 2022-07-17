@@ -13,6 +13,7 @@ const Skeleton = () => {
                 <div className="pulse skeleton__block"></div>
                 <div className="pulse skeleton__block"></div>
             </div>
+            <h2 className="cas"></h2>
         </>
     )
 }
