@@ -6,13 +6,51 @@ import useMarvelService from '../../../services/marvel-service';
 import AppBanner from '../../app-banner/app-banner';
 import Spinner from '../../spinner/spinner';
 import ErrorMessage from '../../error-message/error-message';
-import Skeleton from '../../skeleton/skeleton';
+// import Skeleton from '../../skeleton/skeleton';
 
-import './singleComicLayout.scss';
+import './single-character-page.scss';
 
-const SingleCharacterPage = ({data}) => {
+const SingleCharacterPage = () => {
+    const {charId} = useParams();
+    const [char, setChar] = useState(null);
 
-    const {title, description, pageCount, thumbnail, language, price} = data;
+    const {getCharacter, clearError, loading, error} = useMarvelService();
+
+    useEffect(() => {
+        updateChar()
+    }, [charId])
+
+    console.log(charId);
+
+    const updateChar = () => {
+        clearError();
+        getCharacter(charId)
+            .then(onCharLoaded)
+    }
+
+    const onCharLoaded = (char) => {
+        setChar(char);
+    }
+
+    const errorMassage = error ? <ErrorMessage></ErrorMessage> : null;
+    const spinner = loading ? <Spinner/>: null;
+    const content = !(loading || error || !char) ? <View char = {char}/> : null;
+
+    return (
+        <>
+            <AppBanner/>        
+            {errorMassage}
+            {spinner}
+            {content}
+        </>
+    )
+}
+
+
+
+const View = ({char}) => {
+
+    const {title, description, pageCount, thumbnail, language, price} = char;
 
     return (
         <div className="single-comic">
@@ -24,7 +62,7 @@ const SingleCharacterPage = ({data}) => {
                 <p className="single-comic__descr">Language: {language}</p>
                 <div className="single-comic__price">{price}</div>
             </div>
-            <Link to="/comics" className="single-comic__back">Back to all</Link>
+            <Link to="/" className="single-comic__back">Back to all</Link>
         </div>
     )
 }
