@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 import useMarvelService from '../../../services/marvel-service';
 
@@ -20,8 +21,6 @@ const SingleCharacterPage = () => {
         updateChar()
     }, [charId])
 
-    console.log(charId);
-
     const updateChar = () => {
         clearError();
         getCharacter(charId)
@@ -38,6 +37,13 @@ const SingleCharacterPage = () => {
 
     return (
         <>
+            <Helmet>
+                <meta
+                    name="character page"
+                    content="page with choosen character"
+                    />
+                <title>Character #{charId}</title>
+            </Helmet>
             <AppBanner/>        
             {errorMassage}
             {spinner}

@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import { Formik, Form, Field, ErrorMessage as FormikErrorMassage } from "formik";
 import * as Yup from 'yup';
@@ -12,7 +12,7 @@ const CharSearchForm = () => {
     const [char, setChar] = useState(null); 
     // const linked = useNavigate(); 
 
-    const { getCharacterByName, error, clearError, loading  } = useMarvelService(); 
+    const { getCharacterByName, error, clearError } = useMarvelService(); 
 
     // console.log(getCharacterByName("Wolverine"));
     const onCharLoaded = (char) => {
