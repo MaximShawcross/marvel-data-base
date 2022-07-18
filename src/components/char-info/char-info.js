@@ -1,17 +1,13 @@
 import { useState, useEffect } from 'react';
 
-import Spinner from '../spinner/spinner';
-import ErrorMessage from '../error-message/error-message';
-import Skeleton from '../skeleton/skeleton'
-
 import useMarvelService from '../../services/marvel-service';
+import setContent from '../../utils/set-content';   
 
 import './char-info.scss';
 
 const CharInfo = (props) => {
     const [char, setChar] = useState(null)
-
-    const {error, loading, getCharacter} = useMarvelService();
+    const {getCharacter, clearError,  setProcess, process} = useMarvelService();
 
     useEffect(() => {
         updateCharacter();
@@ -24,8 +20,10 @@ const CharInfo = (props) => {
             return;
         }
 
+        clearError();
         getCharacter(charId)
             .then(onCharacterLoaded)
+            .then(() => setProcess('confirmed'));
 
         // console.log('func runs');
     };
@@ -34,28 +32,20 @@ const CharInfo = (props) => {
         // setLoading(false);
         setChar(item => char);
     }
-     
-    const skeleton = char || loading || error ? null : <Skeleton/>
-    const errorMassage = error ? <ErrorMessage/> : null;
-    const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || errorMassage || !char) ? <View character={char}/>: null
-    
+
     return (
         <div className="char__info">
-            {skeleton}
-            {errorMassage}
-            {spinner}
-            {content} 
+            {setContent(process, View, char)}
         </div>
     )
     
 }
 
-const View = ({character}) => {
-    const {name, thumbnail, homepage, wiki, comics, description} = character;
+const View = ({data}) => {
+    const {name, thumbnail, homepage, wiki, comics, description} = data;
     
     let imgStyle = {'objectFit' : 'cover'};
-    if (character.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
+    if (data.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
         imgStyle = {'objectFit' : 'unset'};
     }
     return ( 
