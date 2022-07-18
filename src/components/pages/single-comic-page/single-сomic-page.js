@@ -6,7 +6,7 @@ import useMarvelService from '../../../services/marvel-service';
 import AppBanner from '../../app-banner/app-banner';
 import Spinner from '../../spinner/spinner';
 import ErrorMessage from '../../error-message/error-message';
-import Skeleton from '../../skeleton/skeleton';
+// import Skeleton from '../../skeleton/skeleton';
 
 import './single-сomic.scss';
 
@@ -18,6 +18,7 @@ const SingleComicPage = () => {
 
     useEffect(() => {
         updateComic();
+        // eslint-disable-next-line
     }, [comicId]);
 
     const updateComic = () => {
