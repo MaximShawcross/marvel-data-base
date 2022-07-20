@@ -12,7 +12,7 @@ const CharSearchForm = () => {
     const [char, setChar] = useState(null); 
     // const linked = useNavigate(); 
 
-    const { getCharacterByName, error, clearError } = useMarvelService(); 
+    const { getCharacterByName, error, clearError, process, setProcess } = useMarvelService(); 
 
     // console.log(getCharacterByName("Wolverine"));
     const onCharLoaded = (char) => {
@@ -24,6 +24,7 @@ const CharSearchForm = () => {
         getCharacterByName(name)
             .then(onCharLoaded);
     }
+
     const errorMassage = error ? <div className="char__search-critical-error"></div> : null;
     const content = !char ? null : char.length > 0 ? 
         <div className="char__search-wrapper">
